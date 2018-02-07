@@ -5,6 +5,13 @@ def list_peak_finder(L, start=0, end=None):
     If L[n] only has one neighbour, then it is sufficient that it is greater
     than that neighbour only.
     Returns the peak.
+    Complexity:
+    T(n) = time take for an operation on list of size n. Then:
+    T(n) = T(n/2) + c
+         = T(n/4) + c + c
+         ...lg n times
+         = T(1) + lg(n)*c
+    so, T(n) = Th(lg n)
     """
     if end == None:
         end = len(L)
