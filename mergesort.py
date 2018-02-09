@@ -42,7 +42,7 @@ def main():
     print(mergesort([5,4,6,7,3,1,2,9,8]))
     print(mergesort_slice([5,4,6,7,3,1,2,9,8]))
     long_list = []
-    for i in range(100000):
+    for i in range(10000):
         long_list.append(randint(0, 999))
     start = timer()
     mergesort(long_list)
@@ -53,6 +53,8 @@ def main():
     test2 = timer()-start
     print("Time taken, mergesort with slices: ", test2)
     print("Ratio: ", test2/test1)
-
+    start = timer()
+    long_list.sort()
+    print("Time taken, .sort(): ", timer()-start)
 if __name__ == "__main__":
     main()
