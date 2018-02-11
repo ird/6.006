@@ -30,15 +30,18 @@ def max_heapify(heap, root):
     """
     largest = select_new_root(heap, root)
     if largest == "root":
+        print("nothing left to change")
         return heap
     if largest == "left":
         l = left(heap, root)
+        print("at", root, "new root should be (left)", l)
         t = heap[l]
         heap[l] = heap[root]
         heap[root] = t
         return max_heapify(heap, l)
     if largest == "right":
         r = right(heap, root)
+        print("at", root, "new root should be (right)", r)
         t = heap[r]
         heap[r] = heap[root]
         heap[root] = t
@@ -52,22 +55,24 @@ def select_new_root(heap, root):
     IndexErrors as they occur.
     """
     try:
-        left = left(heap, root)
+        l = left(heap, root)
         try:
-            right = right(heap, root)
-            # there is a right and a left sub tree
-            if heap[left] >= heap[right]:
-                return "root" if heap[root] >= heap[left] else "left"
+            r = right(heap, root)
+            if heap[l] >= heap[r]:
+                # print("left is bigger than right, so testing heap[l]")
+                return "root" if heap[root] >= heap[l] else "left"
             else:
-                return "root" if heap[root] >= heap[right] else "right"
+                # print("right is bigger than left, so testing heap[r]")
+                return "root" if heap[root] >= heap[r] else "right"
         except:
-            # there is a left sub-tree but no right sub-tree
-            return "root" if heap[root] >= heap[left] else "left"
+            # print("there is no right sub-tree")
+            return "root" if heap[root] >= heap[l] else "left"
     except:
-        # there is no left sub tree
         try:
-            return "root" if heap[root] >= heap[right] else "right"
+            # print("there is no left sub-tree")
+            return "root" if heap[root] >= heap[r] else "right"
         except:
+            # print("there are no leaves")
             return "root" # there are no children
 
 
@@ -78,8 +83,22 @@ def build_heap(array):
     pass
 
 def main():
-    heap = [16,14,10,7,6,1,2]
-    print(heap[left(heap, 1)])
+    heap = [4,15,11,7,6,1,2]
+    print(select_new_root(heap, 0))
+    print(max_heapify(heap, 0))
+
+def test():
+    heap = [4, 5, 0]
+    assert(select_new_root(heap, 0) == "left")
+    assert(max_heapify(heap, 0) == [5, 4, 0])
+    heap = [1, 1, 3]
+    assert(select_new_root(heap, 0) == "right")
+    assert(max_heapify(heap, 0) == [3, 1, 1])
+    heap = [10, 4, 5]
+    assert(select_new_root(heap, 1) == "root")
+    heap = [10, 11, 8, 16, 17]
+    assert(max_heapify(heap, 0) == [11, 17, 8, 16, 10])
+
 
 if __name__ == "__main__":
     main()
