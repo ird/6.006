@@ -32,24 +32,53 @@ def max_heapify(heap, root):
     Returns heap as a max-heap in O(lg n) by correcting the violation of the max-heap-property
     at the heap's root.
     """
-    largest = select_new_root(heap, root)
+    largest = quick_select(heap, root)
     if largest == "root":
         # print("nothing left to change")
         return
     if largest == "left":
-        l = left(heap, root)
+        l = 2*root+1
         # print("at", root, "new root should be (left)", l)
         t = heap[l]
         heap[l] = heap[root]
         heap[root] = t
         return max_heapify(heap, l)
     if largest == "right":
-        r = right(heap, root)
+        r = 2*root+2
         # print("at", root, "new root should be (right)", r)
         t = heap[r]
         heap[r] = heap[root]
         heap[root] = t
         return max_heapify(heap, r)
+
+def quick_select(heap, root):
+    """
+    version of select_new_root(), below, that doesn't use exceptions, for speed
+    profiler shows 85% of time spent in select_new_root()
+    """
+    l = 2*root+1
+    if l >= len(heap):
+        left_branch = False
+    else:
+        left_branch = True
+    r = 2*root+2
+    if r >= len(heap):
+        right_branch = False
+    else:
+        right_branch = True
+
+    if left_branch and right_branch:
+        if heap[l] >= heap[r]:
+            return "root" if heap[root] >= heap[l] else "left"
+        else:
+            return "root" if heap[root] >= heap[r] else "right"
+    if not left_branch or not right_branch:
+        return "root"
+
+    if left_branch:
+        return "root" if heap[root] >= heap[l] else "left"
+    if right_branch:
+        return "root" if heap[root] >= heap[r] else "right"
 
 def select_new_root(heap, root):
     """
@@ -117,14 +146,17 @@ def test():
     # run "py.test heaps.py"
     heap = [4, 5, 0]
     assert(select_new_root(heap, 0) == "left")
+    assert(quick_select(heap, 0) == "left")
     max_heapify(heap, 0)
     assert(heap == [5, 4, 0])
     heap = [1, 1, 3]
     assert(select_new_root(heap, 0) == "right")
+    assert(quick_select(heap, 0) == "right")
     max_heapify(heap, 0)
     assert(heap == [3, 1, 1])
     heap = [10, 4, 5]
     assert(select_new_root(heap, 1) == "root")
+    assert(quick_select(heap, 0) == "root")
     heap = [10, 11, 8, 16, 17]
     max_heapify(heap, 0)
     assert(heap == [11, 17, 8, 16, 10])
