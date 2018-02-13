@@ -56,5 +56,6 @@ def main():
     start = timer()
     long_list.sort()
     print("Time taken, .sort(): ", timer()-start)
+    
 if __name__ == "__main__":
     main()
